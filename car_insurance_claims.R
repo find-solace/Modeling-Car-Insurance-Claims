@@ -27,7 +27,7 @@ insurance_df %>% mutate(missing_annual_mileage = is.na(annual_mileage)) %>%
 #For missing values in both columns (credit_score and annual_mileage),
 #the median gender is male, while for non-missing values, the median gender is female.
 
-str(insurance_df)
+summary(insurance_df)
 
 # The structure suggests that the cols with missing values 
 #are normally distributed. Hence, imputing with the mean is acceptable.
@@ -37,6 +37,31 @@ clean_df <- insurance_df %>% group_by(gender) %>%
   mutate(credit_score_filled = 
            ifelse(is.na(credit_score), mean(credit_score, na.rm = T), credit_score)) %>%
   mutate(annual_mileage_filled = ifelse(is.na(annual_mileage), mean(annual_mileage, na.rm = T), annual_mileage)) %>%
-  ungroup()
+  ungroup() %>% select(-c(credit_score, annual_mileage))
+
+##Creating a features df and logistic models
+
+features_df <- data.frame(features = c(names(subset(clean_df, select = -c(outcome)))))
+
+accuracies <- c()
+for(col in features_df$features){
+  formula_string <- glue('outcome ~ {col}')
+  formula <- as.formula(formula_string)
+  
+  model <- glm(formula, data = clean_df, family = 'binomial')
+
+
+   
+}
+
+
+
+
+
+
+
+
+
+
 
 
