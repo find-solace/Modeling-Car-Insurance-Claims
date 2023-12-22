@@ -4,6 +4,7 @@ p_load(tidyverse, ggfortify, glue, yardstick, visdat)
 
 #loading and inspecting the df
 insurance_df <- read_csv("car_insurance.csv")
+
 glimpse(insurance_df)
 
 #removing customer id column
@@ -44,16 +45,27 @@ clean_df <- insurance_df %>% group_by(gender) %>%
 features_df <- data.frame(features = c(names(subset(clean_df, select = -c(outcome)))))
 
 accuracies <- c()
+
 for(col in features_df$features){
   formula_string <- glue('outcome ~ {col}')
   formula <- as.formula(formula_string)
   
   model <- glm(formula, data = clean_df, family = 'binomial')
-
-
-   
+  
+  predictions <- round(fitted(model))
+  
+  accuracy <- length(which(predictions == clean_df$outcome)) / length(clean_df$outcome)
+  
+  features_df[which(features_df$features == col), "accuracy"] = accuracy
+  
 }
 
+best_feature <- features_df$features[which.max(features_df$accuracy)]
+
+best_accuracy <- max(features_df$accuracy)
+
+#Best feature df
+best_feature_df <- data.frame(best_feature, best_accuracy)
 
 
 
