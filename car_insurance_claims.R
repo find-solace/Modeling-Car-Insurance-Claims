@@ -67,7 +67,7 @@ best_accuracy <- max(features_df$accuracy)
 #Best feature df
 best_feature_df <- data.frame(best_feature, best_accuracy)
 
-##The best feature is drivin experience, with an accuracy of 0.78
+##The best feature is driving experience, with an accuracy of 0.78
 
 
 
